@@ -65,6 +65,11 @@ while [[ $# -gt 0 ]]; do
       shift
       shift
       ;; 
+    --snp_ids)
+      snp_ids="$2" 
+      shift
+      shift
+      ;; 
     -i|--sampleIDCol)
       SAMPLEIDCOL="$2"
       shift # past argument
@@ -171,6 +176,7 @@ fi
 cmd="""regenie \
           --step 1 \
           --bed "${HOME}/${GENOTYPE_PLINK}" \
+          --extract "${HOME}/${snp_ids}" \
           --phenoFile ${HOME}/${PHENOFILE} \
           --phenoCol ""${PHENOCOL}"" \
           --covarFile ${HOME}/${PHENOFILE} \
@@ -180,7 +186,7 @@ cmd="""regenie \
           --threads=${n_threads} \
           --bsize 1000 \
           --qt \
-          --out ukb_step1_${PHENOCOL}
+          --out $OUT
 """
 
 run_container

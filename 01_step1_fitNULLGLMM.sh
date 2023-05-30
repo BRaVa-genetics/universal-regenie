@@ -173,12 +173,12 @@ else
   INVNORMALISE=FALSE
 fi
 
-pgen="${HOME}/${GENOTYPE_PLINK}"
-pgen="${pgen%.*}"
+bed="${HOME}/${GENOTYPE_PLINK}"
+bed="${bed%.*}"
 
 cmd="""regenie \
           --step 1 \
-          --pgen $pgen \
+          --bed $bed \
           --extract "${HOME}/${snp_ids}" \
           --phenoFile ${HOME}/${PHENOFILE} \
           --phenoCol ""${PHENOCOL}"" \

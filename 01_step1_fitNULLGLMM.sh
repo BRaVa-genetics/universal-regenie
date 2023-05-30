@@ -179,14 +179,59 @@ bed="${bed%.*}"
 awk '{print $1, $1}' ${SAMPLEIDS} > sampleids
 sed -i '1i FID IID' sampleids
 
+IFS=',' read -r -a array <<< "$COVARCOLLIST"
+
+awk -v colnames="$COVARCOLLIST" '
+BEGIN{ FS=OFS="\t" }
+FNR==1{
+  split(colnames, cols, ",");
+  for(i in cols){
+    for(j=1; j<=NF; j++){
+      if($j==cols[i]){
+        col[i]=j;
+      }
+    }
+  }
+}
+{
+  printf "%s %s", $1, $2
+  for(i in col){
+    printf " %s", $col[i]
+  }
+  print ""
+}
+' brava_with_covariates.tsv > covariates.tsv
+
+IFS=',' read -r -a array <<< "$PHENOCOL"
+
+awk -v colnames="$PHENOCOL" '
+BEGIN{ FS=OFS="\t" }
+FNR==1{
+  split(colnames, cols, ",");
+  for(i in cols){
+    for(j=1; j<=NF; j++){
+      if($j==cols[i]){
+        col[i]=j;
+      }
+    }
+  }
+}
+{
+  printf "%s %s", $1, $2
+  for(i in col){
+    printf " %s", $col[i]
+  }
+  print ""
+}
+' brava_with_covariates.tsv > phenotypes.tsv
 
 cmd="""regenie \
           --step 1 \
           --bed $bed \
           --extract "${HOME}/${snp_ids}" \
-          --phenoFile ${HOME}/${PHENOFILE} \
+          --phenoFile ${HOME}/phenotypes.tsv \
           --phenoCol ""${PHENOCOL}"" \
-          --covarFile ${HOME}/${PHENOFILE} \
+          --covarFile ${HOME}/covariates.tsv \
           --covarColList ""${COVARCOLLIST}"" \
           --catCovarList=""${CATEGCOVARCOLLIST}"" \
           --keep ${HOME}/sampleids \

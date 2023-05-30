@@ -176,6 +176,8 @@ fi
 bed="${HOME}/${GENOTYPE_PLINK}"
 bed="${bed%.*}"
 
+awk '{print $1, $1}' ${SAMPLEIDS} > sampleids
+
 cmd="""regenie \
           --step 1 \
           --bed $bed \
@@ -185,7 +187,7 @@ cmd="""regenie \
           --covarFile ${HOME}/${PHENOFILE} \
           --covarColList ""${COVARCOLLIST}"" \
           --catCovarList=""${CATEGCOVARCOLLIST}"" \
-          --keep ${SAMPLEIDS} \
+          --keep sampleids \
           --threads=${n_threads} \
           --bsize 1000 \
           --qt \

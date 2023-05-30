@@ -173,6 +173,8 @@ else
   INVNORMALISE=FALSE
 fi
 
+mkdir out
+
 cmd="""regenie \
           --step 1 \
           --pgen "${HOME}/${GENOTYPE_PLINK}" \

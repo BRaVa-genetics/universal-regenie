@@ -187,7 +187,7 @@ cmd="""regenie \
           --covarFile ${HOME}/${PHENOFILE} \
           --covarColList ""${COVARCOLLIST}"" \
           --catCovarList=""${CATEGCOVARCOLLIST}"" \
-          --keep sampleids \
+          --keep ${HOME}/sampleids \
           --threads=${n_threads} \
           --bsize 1000 \
           --qt \

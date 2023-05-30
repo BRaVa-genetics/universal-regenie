@@ -173,7 +173,7 @@ else
   INVNORMALISE=FALSE
 fi
 
-mkdir out
+mkdir out_dir
 
 cmd="""regenie \
           --step 1 \

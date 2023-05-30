@@ -177,6 +177,8 @@ bed="${HOME}/${GENOTYPE_PLINK}"
 bed="${bed%.*}"
 
 awk '{print $1, $1}' ${SAMPLEIDS} > sampleids
+sed -i '1i FID IID' sampleids
+
 
 cmd="""regenie \
           --step 1 \

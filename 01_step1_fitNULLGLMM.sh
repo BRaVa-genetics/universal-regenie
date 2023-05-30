@@ -176,7 +176,7 @@ fi
 cmd="""regenie \
           --step 1 \
           --pgen "${HOME}/${GENOTYPE_PLINK}" \
-          --extract "${HOME}/${snp_ids}" \ 
+          --extract "${HOME}/${snp_ids}" \
           --phenoFile ${HOME}/${PHENOFILE} \
           --phenoCol ""${PHENOCOL}"" \
           --covarFile ${HOME}/${PHENOFILE} \

@@ -200,7 +200,7 @@ FNR==1{
   }
   print ""
 }
-' brava_with_covariates.tsv > covariates.tsv
+' ${HOME}/${PHENOFILE} > covariates.tsv
 
 IFS=',' read -r -a array <<< "$PHENOCOL"
 
@@ -223,7 +223,7 @@ FNR==1{
   }
   print ""
 }
-' brava_with_covariates.tsv > phenotypes.tsv
+' ${HOME}/${PHENOFILE} > phenotypes.tsv
 
 cmd="""regenie \
           --step 1 \

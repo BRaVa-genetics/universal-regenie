@@ -138,8 +138,6 @@ echo "OUT               = ${OUT}"
 echo "SINGULARITY       = ${SINGULARITY}"
 echo "TRAITTYPE         = ${TRAITTYPE}"
 echo "PLINK             = ${PLINK_WES}.{bim/bed/fam}"
-echo "SPARSEGRM         = ${SPARSEGRM}"
-echo "SPARSEGRMID       = ${SPARSEGRMID}"
 echo "PHENOFILE         = ${PHENOFILE}"
 echo "PHENOCOL          = ${PHENOCOL}"
 echo "COVARCOLLIST      = ${COVARCOLLIST}"
@@ -181,7 +179,8 @@ cmd="""regenie \
           --keep ${SAMPLEIDS} \
           --threads=${n_threads} \
           --bsize 1000 \
-          --qt
+          --qt \
+          --out ukb_step1_${PHENOCOL}
 """
 
 run_container

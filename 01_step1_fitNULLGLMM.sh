@@ -186,7 +186,7 @@ cmd="""regenie \
           --threads=${n_threads} \
           --bsize 1000 \
           --qt \
-          --out $OUT
+          --out ${HOME}/$OUT
 """
 
 run_container

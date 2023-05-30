@@ -9,8 +9,6 @@ SAMPLEIDCOL="IID"
 OUT="out"
 TRAITTYPE=""
 PLINK=""
-SPARSEGRM=""
-SPARSEGRMID=""
 PHENOFILE=""
 PHENOCOL=""
 COVARCOLLIST=""
@@ -39,16 +37,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     -p|--genotypePlink)
       GENOTYPE_PLINK="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    --sparseGRM)
-      SPARSEGRM="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    --sparseGRMID)
-      SPARSEGRMID="$2"
       shift # past argument
       shift # past value
       ;;
@@ -123,10 +111,6 @@ if [[ ${SAMPLEIDS} != "" ]]; then
   SAMPLEIDS=${HOME}/$SAMPLEIDS
 fi
 
-if [[ ${SPARSEGRM} == "" || ${SPARSEGRMID} == "" ]]; then
-  echo "Sparse GRM .mtx file not set. Generate a GRM in step 0."
-fi
-
 if [[ ${PHENOFILE} == "" ]]; then
   echo "phenoFile not set"
   exit 1
@@ -168,14 +152,6 @@ if [[ "$PHENOCOL" =~ .*"-".* || "$PHENOCOL" =~ .*",".* || "$PHENOCOL" =~ .*"=".*
   exit 1
 fi
 
-if [[ ${SPARSEGRM} == "" || ${SPARSEGRMID} == "" ]]; then
-  if [[ ${GENOTYPE_PLINK} == "" ]]; then
-    echo "Genotype plink files plink.{bim,bed,fam} not set - cannot generate GRM!"
-    exit 1
-  fi
-  generate_GRM
-fi
-
 # For debugging
 set -exo pipefail
 
@@ -187,31 +163,25 @@ n_threads=$(( $(nproc --all) - 1 ))
 
 # Get inverse-normalize flag if trait_type=="quantitative"
 if [[ ${TRAITTYPE} == "quantitative" ]]; then
-  echo "Quantitative trait passed to SAIGE, perform IRNT"
+  echo "Quantitative trait passed to regenie, perform IRNT"
   INVNORMALISE=TRUE
 else
-  echo "Binary trait passed to SAIGE"
+  echo "Binary trait passed to regenie"
   INVNORMALISE=FALSE
 fi
 
-cmd="""step1_fitNULLGLMM.R \
-      --plinkFile "${HOME}/${GENOTYPE_PLINK}" \
-	    --sparseGRMFile ${HOME}/${SPARSEGRM} \
-      --sparseGRMSampleIDFile ${HOME}/${SPARSEGRMID} \
-      --useSparseGRMtoFitNULL=TRUE \
-      --phenoFile ${HOME}/${PHENOFILE} \
-      --skipVarianceRatioEstimation FALSE \
-      --traitType=${TRAITTYPE} \
-      --invNormalize=${INVNORMALISE} \
-      --phenoCol ""${PHENOCOL}"" \
-      --covarColList ""${COVARCOLLIST}"" \
-      --qCovarColList=""${CATEGCOVARCOLLIST}"" \
-      --sampleIDColinphenoFile=${SAMPLEIDCOL} \
-      --outputPrefix="${HOME}/${OUT}" \
-      --IsOverwriteVarianceRatioFile=TRUE \
-      --nThreads=${n_threads} \
-      --isCateVarianceRatio=TRUE \
-      --relatednessCutoff=0.125 \
-	    --SampleIDIncludeFile=${SAMPLEIDS}"""
+cmd="""regenie \
+          --step 1 \
+          --bed "${HOME}/${GENOTYPE_PLINK}" \
+          --phenoFile ${HOME}/${PHENOFILE} \
+          --phenoCol ""${PHENOCOL}"" \
+          --covarFile ${HOME}/${PHENOFILE} \
+          --covarColList ""${COVARCOLLIST}"" \
+          --catCovarList=""${CATEGCOVARCOLLIST}"" \
+          --keep ${SAMPLEIDS} \
+          --threads=${n_threads} \
+          --bsize 1000 \
+          --qt
+"""
 
 run_container

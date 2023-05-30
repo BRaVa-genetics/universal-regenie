@@ -218,31 +218,22 @@ else
   exit 1
 fi
 
-cmd="step2_SPAtests.R \
-        --bedFile=$BED \
-        --bimFile=$BIM \
-        --famFile=$FAM \
-        --groupFile=$GROUPFILE \
-        --annotation_in_groupTest=$ANNOTATIONS \
-	      --vcfFile=${VCF} \
-        --vcfField="DS" \
-        --chrom="$CHR" \
-		    --minMAF=0 \
-        --minMAC=${min_mac} \
-        --GMMATmodelFile=${HOME}/${MODELFILE} \
-        --varianceRatioFile=${HOME}/${VARIANCERATIO} \
-        --sparseGRMFile=${HOME}/${SPARSEGRM} \
-        --sparseGRMSampleIDFile=${HOME}/${SPARSEGRMID} \
-	      --subSampleFile=${SUBSAMPLES} \
-        --LOCO=FALSE \
-        --is_Firth_beta=TRUE \
-        --pCutoffforFirth=0.1 \
-        --is_output_moreDetails=TRUE \
-        --is_fastTest=TRUE \
-        --is_output_markerList_in_groupTest=TRUE \
-        --is_single_in_groupTest=TRUE \
-        --SAIGEOutputFile=${HOME}/${OUT}.txt
-    "
+cmd="regenie \
+  --step 2 \
+  --bed $PLINK \
+  --phenoFile ${HOME}/${MODELFILE} \
+  --covarFile ${HOME}/${VARIANCERATIO} \
+  --extract ${HOME}/${SPARSEGRM} \
+  --exclude ${HOME}/${SPARSEGRMID} \
+  --keep ${SUBSAMPLES} \
+  --firth --approx --pThresh 0.1 \
+  --bsize 1000 \
+  --pred ${HOME}/${OUT}.txt \
+  --threads 4 \
+  --gz \
+  --out ${HOME}/${OUT}
+"
+
 
 echo "Running variant based tests for all variants in with MAC > 20"
 

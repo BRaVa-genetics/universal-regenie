@@ -236,7 +236,7 @@ cmd="""regenie \
           --catCovarList=""${CATEGCOVARCOLLIST}"" \
           --keep ${HOME}/sampleids \
           --threads=${n_threads} \
-          --bsize 10000 \
+          --bsize 1000 \
           --qt \
           --out ${HOME}/$OUT
 """

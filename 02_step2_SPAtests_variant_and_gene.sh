@@ -179,7 +179,7 @@ else
   exit 1
 fi
 
-awk '{print $1, $1}' ${SAMPLEIDS} > sampleids
+awk '{print $1, $1}' ${SUBSAMPLES} > sampleids
 sed -i '1i FID IID' sampleids
 
 IFS=',' read -r -a array <<< "$COVARCOLLIST"

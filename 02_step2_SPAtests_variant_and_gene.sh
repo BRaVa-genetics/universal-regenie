@@ -232,9 +232,7 @@ cmd="regenie \
   --step 2 \
   --bed $PLINK \
   --phenoFile ${HOME}/phenotypes.tsv \
-  --phenoCol ""${PHENOCOL}"" \
   --covarFile ${HOME}/covariates.tsv \
-  --covarColList ""${COVARCOLLIST}"" \
   --keep ${HOME}/sampleids \
   --firth --approx --pThresh 0.1 \
   --bsize 400 \

@@ -235,7 +235,6 @@ cmd="regenie \
   --phenoCol ""${PHENOCOL}"" \
   --covarFile ${HOME}/covariates.tsv \
   --covarColList ""${COVARCOLLIST}"" \
-  --catCovarList=""${CATEGCOVARCOLLIST}"" \
   --keep ${HOME}/sampleids \
   --firth --approx --pThresh 0.1 \
   --bsize 400 \

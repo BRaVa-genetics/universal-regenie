@@ -10,7 +10,6 @@ TESTTYPE=""
 PLINK=""
 VCF=""
 MODELFILE=""
-VARIANCERATIO=""
 SPARSEGRM=""
 SPARSEGRMID=""
 GROUPFILE=""
@@ -57,11 +56,6 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
-    -v|--varianceRatio)
-      VARIANCERATIO="$2"
-      shift # past argument
-      shift # past value
-      ;;
     -g|--groupFile)
       GROUPFILE="$2"
       shift # past argument
@@ -94,7 +88,6 @@ while [[ $# -gt 0 ]]; do
     -p,--plink: plink filename prefix of bim/bed/fam files. These must be present in the working directory at ./in/plink_for_vr_bed/
     --vcf vcf exome file. If a plink exome file is not available then this vcf file will be used. These must be present in the working directory at ./in/vcf/
     --modelFile: filename of the model file output from step 1. This must be in relation to the working directory.
-    --varianceRatio: filename of the varianceRatio file output from step 1. This must be in relation to the working directory.
     --sparseGRM: filename of the sparseGRM .mtx file. This must be present in the working directory at ./in/sparse_grm/
     --sparseGRMID: filename of the sparseGRM ID file. This must be present in the working directory at ./in/sparse_grm/
 	--chr: chromosome to test.
@@ -145,11 +138,6 @@ if [[ ${MODELFILE} == "" ]]; then
   exit 1
 fi
 
-if [[ ${VARIANCERATIO} == "" ]]; then
-  echo "variance ration file not set"
-  exit 1
-fi
-
 if [[ $GROUPFILE == "" ]] && [[ ${TESTTYPE} == "group" ]]; then
   echo "attempting to run group tests without an annotation file"
   exit 1
@@ -173,7 +161,6 @@ echo "TESTTYPE          = ${TESTTYPE}"
 echo "SINGULARITY       = ${SINGULARITY}"
 echo "PLINK             = ${PLINK}.{bim/bed/fam}"
 echo "MODELFILE         = ${MODELFILE}"
-echo "VARIANCERATIO     = ${VARIANCERATIO}"
 echo "GROUPFILE         = ${GROUPFILE}"
 echo "ANNOTATIONS"      = ${ANNOTATIONS}
 echo "SPARSEGRM         = ${SPARSEGRM}"
@@ -218,22 +205,71 @@ else
   exit 1
 fi
 
+awk '{print $1, $1}' ${SAMPLEIDS} > sampleids
+sed -i '1i FID IID' sampleids
+
+IFS=',' read -r -a array <<< "$COVARCOLLIST"
+
+awk -v colnames="$COVARCOLLIST" '
+BEGIN{ FS=OFS="\t" }
+FNR==1{
+  split(colnames, cols, ",");
+  for(i in cols){
+    for(j=1; j<=NF; j++){
+      if($j==cols[i]){
+        col[i]=j;
+      }
+    }
+  }
+}
+{
+  printf "%s %s", $1, $2
+  for(i in col){
+    printf " %s", $col[i]
+  }
+  print ""
+}
+' ${HOME}/${PHENOFILE} > covariates.tsv
+
+IFS=',' read -r -a array <<< "$PHENOCOL"
+
+awk -v colnames="$PHENOCOL" '
+BEGIN{ FS=OFS="\t" }
+FNR==1{
+  split(colnames, cols, ",");
+  for(i in cols){
+    for(j=1; j<=NF; j++){
+      if($j==cols[i]){
+        col[i]=j;
+      }
+    }
+  }
+}
+{
+  printf "%s %s", $1, $2
+  for(i in col){
+    printf " %s", $col[i]
+  }
+  print ""
+}
+' ${HOME}/${PHENOFILE} > phenotypes.tsv
+
 cmd="regenie \
   --step 2 \
   --bed $PLINK \
-  --phenoFile ${HOME}/${MODELFILE} \
-  --covarFile ${HOME}/${VARIANCERATIO} \
-  --extract ${HOME}/${SPARSEGRM} \
-  --exclude ${HOME}/${SPARSEGRMID} \
-  --keep ${SUBSAMPLES} \
+  --phenoFile ${HOME}/phenotypes.tsv \
+  --phenoCol ""${PHENOCOL}"" \
+  --covarFile ${HOME}/covariates.tsv \
+  --covarColList ""${COVARCOLLIST}"" \
+  --catCovarList=""${CATEGCOVARCOLLIST}"" \
+  --keep ${HOME}/sampleids \
   --firth --approx --pThresh 0.1 \
-  --bsize 1000 \
-  --pred ${HOME}/${OUT}.txt \
+  --bsize 400 \
+  --pred ${HOME}/${MODELFILE} \
   --threads 4 \
   --gz \
   --out ${HOME}/${OUT}
 "
-
 
 echo "Running variant based tests for all variants in with MAC > 20"
 

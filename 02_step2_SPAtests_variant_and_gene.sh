@@ -10,8 +10,6 @@ TESTTYPE=""
 PLINK=""
 VCF=""
 MODELFILE=""
-SPARSEGRM=""
-SPARSEGRMID=""
 GROUPFILE=""
 
 saige_version="1.1.8"
@@ -71,16 +69,6 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
-    --sparseGRM)
-      SPARSEGRM="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    --sparseGRMID)
-      SPARSEGRMID="$2"
-      shift # past argument
-      shift # past value
-      ;;
     -h|--help)
       echo "usage: 02_step2_SPAtests_variant_and_gene.sh
   required:
@@ -88,8 +76,6 @@ while [[ $# -gt 0 ]]; do
     -p,--plink: plink filename prefix of bim/bed/fam files. These must be present in the working directory at ./in/plink_for_vr_bed/
     --vcf vcf exome file. If a plink exome file is not available then this vcf file will be used. These must be present in the working directory at ./in/vcf/
     --modelFile: filename of the model file output from step 1. This must be in relation to the working directory.
-    --sparseGRM: filename of the sparseGRM .mtx file. This must be present in the working directory at ./in/sparse_grm/
-    --sparseGRMID: filename of the sparseGRM ID file. This must be present in the working directory at ./in/sparse_grm/
 	--chr: chromosome to test.
   optional:
     -o,--outputPrefix:  output prefix of the SAIGE step 2 output.
@@ -123,16 +109,6 @@ if [[ ${PLINK} == "" ]] && [[ ${VCF} == "" ]]; then
   exit 1
 fi
 
-if [[ ${SPARSEGRM} == "" ]]; then
-  echo "sparse GRM .mtx file not set"
-  exit 1
-fi
-
-if [[ ${SPARSEGRMID} == "" ]]; then
-  echo "sparse GRM ID file not set"
-  exit 1
-fi
-
 if [[ ${MODELFILE} == "" ]]; then
   echo "model file not set"
   exit 1
@@ -163,8 +139,6 @@ echo "PLINK             = ${PLINK}.{bim/bed/fam}"
 echo "MODELFILE         = ${MODELFILE}"
 echo "GROUPFILE         = ${GROUPFILE}"
 echo "ANNOTATIONS"      = ${ANNOTATIONS}
-echo "SPARSEGRM         = ${SPARSEGRM}"
-echo "SPARSEGRMID       = ${SPARSEGRMID}"
 
 # For debugging
 set -exo pipefail
@@ -267,7 +241,6 @@ cmd="regenie \
   --bsize 400 \
   --pred ${HOME}/${MODELFILE} \
   --threads 4 \
-  --gz \
   --out ${HOME}/${OUT}
 "
 

@@ -233,11 +233,10 @@ cmd="regenie \
   --bed $PLINK \
   --phenoFile ${HOME}/phenotypes.tsv \
   --covarFile ${HOME}/covariates.tsv \
-  --keep ${HOME}/sampleids \
   --firth --approx --pThresh 0.1 \
   --bsize 400 \
   --pred ${HOME}/${MODELFILE} \
-  --threads 4 \
+  --threads $(nproc) \
   --out ${HOME}/${OUT}
 "
 

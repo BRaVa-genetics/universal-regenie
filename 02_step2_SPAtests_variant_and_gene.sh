@@ -69,6 +69,16 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
+    --pheno)
+      PHENOCOL="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --covariates)
+      COVARCOLLIST="$2"
+      shift # past argument
+      shift # past value
+      ;;
     -h|--help)
       echo "usage: 02_step2_SPAtests_variant_and_gene.sh
   required:

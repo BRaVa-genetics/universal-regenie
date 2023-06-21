@@ -154,6 +154,7 @@ echo "PLINK             = ${PLINK}.{bim/bed/fam}"
 echo "MODELFILE         = ${MODELFILE}"
 echo "GROUPFILE         = ${GROUPFILE}"
 echo "ANNOTATIONS"      = ${ANNOTATIONS}
+echo "PHENOFILE"        = ${PHENOFILE}
 
 # For debugging
 set -exo pipefail

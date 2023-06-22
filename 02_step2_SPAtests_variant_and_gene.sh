@@ -247,7 +247,7 @@ cmd="regenie \
   --covarFile ${HOME}/covariates.tsv \
   --firth --approx --pThresh 0.1 \
   --bsize 400 \
-  --pred list_file \
+  --pred ${HOME}/list_file \
   --threads $(nproc) \
   --out ${HOME}/${OUT}
 "

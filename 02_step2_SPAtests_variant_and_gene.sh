@@ -54,8 +54,8 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
-    -m|--modelFile)
-      MODELFILE="$2"
+    --locoFile)
+      LOCOFILE="$2"
       shift # past argument
       shift # past value
       ;;
@@ -155,6 +155,7 @@ echo "MODELFILE         = ${MODELFILE}"
 echo "GROUPFILE         = ${GROUPFILE}"
 echo "ANNOTATIONS"      = ${ANNOTATIONS}
 echo "PHENOFILE"        = ${PHENOFILE}
+echo "LOCOFILE"         = ${LOCOFILE}
 
 # For debugging
 set -exo pipefail
@@ -244,6 +245,8 @@ FNR==1{
 }
 ' ${HOME}/${PHENOFILE} > phenotypes.tsv
 
+echo "${pheno} ${HOME}/${LOCOFILE}" > list_file
+
 cmd="regenie \
   --step 2 \
   --bed $PLINK \
@@ -251,7 +254,7 @@ cmd="regenie \
   --covarFile ${HOME}/covariates.tsv \
   --firth --approx --pThresh 0.1 \
   --bsize 400 \
-  --pred ${HOME}/${MODELFILE} \
+  --pred list_file \
   --threads $(nproc) \
   --out ${HOME}/${OUT}
 "

@@ -9,7 +9,6 @@ OUT="out"
 TESTTYPE=""
 PLINK=""
 VCF=""
-MODELFILE=""
 GROUPFILE=""
 
 saige_version="1.1.8"
@@ -124,11 +123,6 @@ if [[ ${PLINK} == "" ]] && [[ ${VCF} == "" ]]; then
   exit 1
 fi
 
-if [[ ${MODELFILE} == "" ]]; then
-  echo "model file not set"
-  exit 1
-fi
-
 if [[ $GROUPFILE == "" ]] && [[ ${TESTTYPE} == "group" ]]; then
   echo "attempting to run group tests without an annotation file"
   exit 1
@@ -151,7 +145,6 @@ echo "OUT               = ${OUT}"
 echo "TESTTYPE          = ${TESTTYPE}"
 echo "SINGULARITY       = ${SINGULARITY}"
 echo "PLINK             = ${PLINK}.{bim/bed/fam}"
-echo "MODELFILE         = ${MODELFILE}"
 echo "GROUPFILE         = ${GROUPFILE}"
 echo "ANNOTATIONS"      = ${ANNOTATIONS}
 echo "PHENOFILE"        = ${PHENOFILE}

@@ -238,6 +238,9 @@ FNR==1{
 }
 ' ${HOME}/${PHENOFILE} > phenotypes.tsv
 
+head phenotypes.tsv
+head covariates.tsv
+
 echo "${pheno} ${HOME}/${LOCOFILE}" > list_file
 
 cmd="regenie \

@@ -207,7 +207,7 @@ FNR==1{
   }
 }
 {
-  printf "%s %s", $1, $2
+  printf "0 %s", $2
   for(i in col){
     printf " %s", $col[i]
   }
@@ -230,7 +230,7 @@ FNR==1{
   }
 }
 {
-  printf "%s %s", $1, $2
+  printf "0 %s", $2
   for(i in col){
     printf " %s", $col[i]
   }

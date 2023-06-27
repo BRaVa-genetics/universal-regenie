@@ -216,6 +216,7 @@ FNR==1{
   } else {
     print $0
   }
+}
 ' ${HOME}/${PHENOFILE} > covariates.tsv
 
 IFS=',' read -r -a array <<< "$PHENOCOL"
@@ -242,6 +243,7 @@ FNR==1{
   } else {
     print $0
   }
+}
 ' ${HOME}/${PHENOFILE} > phenotypes.tsv
 
 head phenotypes.tsv

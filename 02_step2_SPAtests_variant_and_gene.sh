@@ -207,12 +207,15 @@ FNR==1{
   }
 }
 {
-  printf "0 %s", $2
-  for(i in col){
-    printf " %s", $col[i]
+  if (FNR > 1) {
+    printf "0 %s", $2
+    for(i in col){
+      printf " %s", $col[i]
+    }
+    print ""
+  } else {
+    print $0
   }
-  print ""
-}
 ' ${HOME}/${PHENOFILE} > covariates.tsv
 
 IFS=',' read -r -a array <<< "$PHENOCOL"
@@ -230,12 +233,15 @@ FNR==1{
   }
 }
 {
-  printf "0 %s", $2
-  for(i in col){
-    printf " %s", $col[i]
+  if (FNR > 1) {
+    printf "0 %s", $2
+    for(i in col){
+      printf " %s", $col[i]
+    }
+    print ""
+  } else {
+    print $0
   }
-  print ""
-}
 ' ${HOME}/${PHENOFILE} > phenotypes.tsv
 
 head phenotypes.tsv

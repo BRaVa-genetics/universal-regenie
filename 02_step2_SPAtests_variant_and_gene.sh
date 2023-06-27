@@ -189,7 +189,7 @@ else
   exit 1
 fi
 
-awk '{print 0, $1}' ${SUBSAMPLES} > sampleids
+awk '{print $1, $2}' ${SUBSAMPLES} > sampleids
 sed -i '1i FID IID' sampleids
 
 IFS=',' read -r -a array <<< "$COVARCOLLIST"
@@ -213,9 +213,7 @@ FNR==1{
       printf " %s", $col[i]
     }
     print ""
-  } else {
-    print $0
-  }
+  } 
 }
 ' ${HOME}/${PHENOFILE} > covariates.tsv
 
@@ -240,9 +238,7 @@ FNR==1{
       printf " %s", $col[i]
     }
     print ""
-  } else {
-    print $0
-  }
+  } 
 }
 ' ${HOME}/${PHENOFILE} > phenotypes.tsv
 

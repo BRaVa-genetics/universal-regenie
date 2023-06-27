@@ -238,6 +238,27 @@ FNR==1{
 }
 ' ${HOME}/${PHENOFILE} > phenotypes.tsv
 
+awk -v colnames="$PHENOCOL" '
+BEGIN{ FS=OFS="\t" }
+FNR==1{
+  split(colnames, cols, ",");
+  for(i in cols){
+    for(j=1; j<=NF; j++){
+      if($j==cols[i]){
+        col[i]=j;
+      }
+    }
+  }
+}
+{
+  printf "%s %s", $1, $2
+  for(i in col){
+    printf " %s", $col[i]
+  }
+  print ""
+}
+' brava_with_covariates.tsv > phenotypes.tsv
+
 head phenotypes.tsv
 head covariates.tsv
 
@@ -252,7 +273,8 @@ cmd="regenie \
   --bsize 400 \
   --pred ${HOME}/list_file \
   --threads $(nproc) \
-  --out ${HOME}/${OUT}
+  --out ${HOME}/${OUT} \
+  --verbose
 "
 
 echo "Running variant based tests for all variants in with MAC > 20"

@@ -192,8 +192,6 @@ fi
 awk '{print $1, $2}' ${SUBSAMPLES} > sampleids
 sed -i '1i FID IID' sampleids
 
-IFS=',' read -r -a array <<< "$COVARCOLLIST"
-
 awk -v colnames="$COVARCOLLIST" '
 BEGIN{ FS=OFS="\t" }
 FNR==1{
@@ -205,6 +203,7 @@ FNR==1{
       }
     }
   }
+  print "FID IID", colnames
 }
 {
   if (FNR > 1) {
@@ -217,8 +216,6 @@ FNR==1{
 }
 ' ${HOME}/${PHENOFILE} > covariates.tsv
 
-IFS=',' read -r -a array <<< "$PHENOCOL"
-
 awk -v colnames="$PHENOCOL" '
 BEGIN{ FS=OFS="\t" }
 FNR==1{
@@ -230,6 +227,7 @@ FNR==1{
       }
     }
   }
+  print "FID IID", colnames
 }
 {
   if (FNR > 1) {

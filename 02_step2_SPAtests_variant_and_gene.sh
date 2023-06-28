@@ -203,7 +203,7 @@ FNR==1{
       }
     }
   }
-  print "FID IID", colnames
+  gsub(",", OFS, colnames); print "FID IID", colnames
 }
 {
   if (FNR > 1) {
@@ -227,7 +227,7 @@ FNR==1{
       }
     }
   }
-  print "FID IID", colnames
+  gsub(",", OFS, colnames); print "FID IID", colnames
 }
 {
   if (FNR > 1) {

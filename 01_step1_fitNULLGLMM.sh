@@ -176,10 +176,8 @@ fi
 bed="${HOME}/${GENOTYPE_PLINK}"
 bed="${bed%.*}"
 
-awk '{print $1, $1}' ${SAMPLEIDS} > sampleids
+awk '{print 0, $1}' ${SUBSAMPLES} > sampleids
 sed -i '1i FID IID' sampleids
-
-IFS=',' read -r -a array <<< "$COVARCOLLIST"
 
 awk -v colnames="$COVARCOLLIST" '
 BEGIN{ FS=OFS="\t" }
@@ -192,17 +190,18 @@ FNR==1{
       }
     }
   }
+  gsub(",", OFS, colnames); print "FID IID", colnames
 }
 {
-  printf "%s %s", $1, $2
-  for(i in col){
-    printf " %s", $col[i]
-  }
-  print ""
+  if (FNR > 1) {
+    printf "0 %s", $2
+    for(i in col){
+      printf " %s", $col[i]
+    }
+    print ""
+  } 
 }
 ' ${HOME}/${PHENOFILE} > covariates.tsv
-
-IFS=',' read -r -a array <<< "$PHENOCOL"
 
 awk -v colnames="$PHENOCOL" '
 BEGIN{ FS=OFS="\t" }
@@ -215,13 +214,16 @@ FNR==1{
       }
     }
   }
+  gsub(",", OFS, colnames); print "FID IID", colnames
 }
 {
-  printf "%s %s", $1, $2
-  for(i in col){
-    printf " %s", $col[i]
-  }
-  print ""
+  if (FNR > 1) {
+    printf "0 %s", $2
+    for(i in col){
+      printf " %s", $col[i]
+    }
+    print ""
+  } 
 }
 ' ${HOME}/${PHENOFILE} > phenotypes.tsv
 

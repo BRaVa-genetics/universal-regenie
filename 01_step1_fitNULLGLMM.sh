@@ -227,6 +227,10 @@ FNR==1{
 }
 ' ${HOME}/${PHENOFILE} > phenotypes.tsv
 
+head phenotypes.tsv
+head covariates.tsv
+head sampleids
+
 cmd="""regenie \
           --step 1 \
           --bed $bed \

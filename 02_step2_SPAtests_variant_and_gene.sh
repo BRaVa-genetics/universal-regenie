@@ -189,7 +189,7 @@ else
   exit 1
 fi
 
-awk '{print $1, $2}' ${SUBSAMPLES} > sampleids
+awk '{print 0, $1}' ${SUBSAMPLES} > sampleids
 sed -i '1i FID IID' sampleids
 
 awk -v colnames="$COVARCOLLIST" '
@@ -207,7 +207,7 @@ FNR==1{
 }
 {
   if (FNR > 1) {
-    printf "0 %s", $2
+    printf "%s %s", $2, $2
     for(i in col){
       printf " %s", $col[i]
     }
@@ -231,7 +231,7 @@ FNR==1{
 }
 {
   if (FNR > 1) {
-    printf "0 %s", $2
+    printf "%s %s", $2, $2
     for(i in col){
       printf " %s", $col[i]
     }

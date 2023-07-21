@@ -250,6 +250,7 @@ cmd="regenie \
   --bed $PLINK \
   --phenoFile ${HOME}/phenotypes.tsv \
   --covarFile ${HOME}/covariates.tsv \
+  --sample ${HOME}/sampleids \
   --firth --approx --pThresh 0.1 \
   --bsize 400 \
   --pred ${HOME}/list_file \

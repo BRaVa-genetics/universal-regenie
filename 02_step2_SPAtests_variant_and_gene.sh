@@ -10,6 +10,8 @@ TESTTYPE=""
 PLINK=""
 VCF=""
 GROUPFILE=""
+BSIZE="400" # Default bsize value
+
 
 saige_version="1.1.8"
 
@@ -31,6 +33,11 @@ while [[ $# -gt 0 ]]; do
         echo "Test type is not in {variant,group}"
         exit 1
       fi
+      shift # past argument
+      shift # past value
+      ;;
+    --bsize)
+      BSIZE="$2"
       shift # past argument
       shift # past value
       ;;
@@ -255,7 +262,7 @@ cmd="regenie \
   --phenoFile ${HOME}/phenotypes.tsv \
   --covarFile ${HOME}/covariates.tsv \
   --firth --approx --pThresh 0.1 \
-  --bsize 400 \
+  --bsize $BSIZE \
   --pred ${HOME}/list_file \
   --threads $(nproc) \
   --out ${HOME}/${OUT} \

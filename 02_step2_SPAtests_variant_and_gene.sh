@@ -178,6 +178,10 @@ if [[ ${PLINK} != "" ]]; then
   BED=${PLINK}".bed"
   BIM=${PLINK}".bim"
   FAM=${PLINK}".fam"
+
+  # set FID to IID
+  awk -i inplace '{$1=$2}1' OFS='\t' ukb_wes_450k.qced.chr21.fam
+
   VCF=""
 elif [[ ${VCF} != "" ]]; then 
   BED=""
@@ -189,7 +193,7 @@ else
   exit 1
 fi
 
-awk '{print 0, $1}' ${SUBSAMPLES} > sampleids
+awk '{print $1, $1}' ${SUBSAMPLES} > sampleids
 sed -i '1i FID IID' sampleids
 
 awk -v colnames="$COVARCOLLIST" '
@@ -250,7 +254,6 @@ cmd="regenie \
   --bed $PLINK \
   --phenoFile ${HOME}/phenotypes.tsv \
   --covarFile ${HOME}/covariates.tsv \
-  --sample ${HOME}/sampleids \
   --firth --approx --pThresh 0.1 \
   --bsize 400 \
   --pred ${HOME}/list_file \

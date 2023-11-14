@@ -180,7 +180,7 @@ if [[ ${PLINK} != "" ]]; then
   FAM=${PLINK}".fam"
 
   # set FID to IID
-  awk -i inplace '{$1=$2}1' OFS='\t' ukb_wes_450k.qced.chr21.fam
+  awk -i inplace '{$1=$2}1' OFS='\t' $FAM
 
   VCF=""
 elif [[ ${VCF} != "" ]]; then 

@@ -174,10 +174,11 @@ if [[ "$TESTTYPE" = "variant" ]]; then
   echo "variant testing"
   min_mac=0.5
   GROUPFILE=""
-else
+elif [[ "$TESTTYPE" = "group" ]]; then
   echo "gene testing"
   min_mac=20
-  GROUPFILE="${HOME}/${GROUPFILE}"
+
+  python3 convert_saige_group_to_regenie.py "${HOME}/${GROUPFILE}" anno.txt set.txt ${ANNOTATIONS}
 fi
 
 if [[ ${PLINK} != "" ]]; then
@@ -256,18 +257,36 @@ head covariates.tsv
 
 echo "${pheno} ${HOME}/${LOCOFILE}" > list_file
 
-cmd="regenie \
-  --step 2 \
-  --bed $PLINK \
-  --phenoFile ${HOME}/phenotypes.tsv \
-  --covarFile ${HOME}/covariates.tsv \
-  --firth --approx --pThresh 0.1 \
-  --bsize $BSIZE \
-  --pred ${HOME}/list_file \
-  --threads $(nproc) \
-  --out ${HOME}/${OUT} \
-  --verbose
-"
+if [[ "$TESTTYPE" = "variant" ]]; then
+  cmd="regenie \
+    --step 2 \
+    --bed $PLINK \
+    --phenoFile ${HOME}/phenotypes.tsv \
+    --covarFile ${HOME}/covariates.tsv \
+    --firth --approx --pThresh 0.1 \
+    --bsize $BSIZE \
+    --pred ${HOME}/list_file \
+    --threads $(nproc) \
+    --out ${HOME}/${OUT} \
+    --verbose
+  "
+elif [[ "$TESTTYPE" = "group" ]]; then
+  cmd="regenie \
+    --step 2 \
+    --bed $PLINK \
+    --phenoFile ${HOME}/phenotypes.tsv \
+    --covarFile ${HOME}/covariates.tsv \
+    --anno-file	${HOME}/anno.txt \
+    --set-list ${HOME}/set.txt \
+    --mask-def ${HOME}/mask.txt \
+    --firth --approx --pThresh 0.1 \
+    --bsize $BSIZE \
+    --pred ${HOME}/list_file \
+    --threads $(nproc) \
+    --out ${HOME}/${OUT} \
+    --verbose
+  "
+fi
 
 echo "Running variant based tests for all variants in with MAC > 20"
 

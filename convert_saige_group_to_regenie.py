@@ -1,4 +1,5 @@
 import argparse
+import gzip
 
 def convert_annotation_string(input_str):
     # Split the string by ':' and iterate over each part
@@ -40,7 +41,7 @@ def process_file(input_file, annotation_file, set_list_file, annotation_string):
                     annotations.append(f"{chrom}:{pos}:{ref}:{alt} {gene_name} {anno}")
 
     # Writing to Annotation File
-    with open(annotation_file, 'w') as anno_file:
+    with gzip.open(annotation_file, 'w') as anno_file:
         for annotation in annotations:
             anno_file.write(annotation + '\n')
 

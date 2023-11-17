@@ -196,7 +196,11 @@ FNR==1{
   if (FNR > 1) {
     printf "%s %s", $1, $1
     for(i in col){
-      printf " %s", $(col[i])
+      if ($(col[i]) == "") {
+        printf " NA"
+      } else {
+        printf " %s", $(col[i])
+      }
     }
     print ""
   }
@@ -220,7 +224,11 @@ FNR==1{
   if (FNR > 1) {
     printf "%s %s", $1, $1
     for(i in col){
-      printf " %s", $(col[i])
+      if ($(col[i]) == "") {
+        printf " NA"
+      } else {
+        printf " %s", $(col[i])
+      }
     }
     print ""
   }

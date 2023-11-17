@@ -23,7 +23,7 @@ def process_file(input_file, annotation_file, set_list_file, annotation_string):
         for line in converted_lines:
             conv_file.write(line + '\n')
 
-    with open(input_file, 'r') as file:
+    with gzip.open(input_file, 'r') as file:
         for line in file:
             parts = line.strip().split()
             gene_name = parts[0]
@@ -41,7 +41,7 @@ def process_file(input_file, annotation_file, set_list_file, annotation_string):
                     annotations.append(f"{chrom}:{pos}:{ref}:{alt} {gene_name} {anno}")
 
     # Writing to Annotation File
-    with gzip.open(annotation_file, 'w') as anno_file:
+    with open(annotation_file, 'w') as anno_file:
         for annotation in annotations:
             anno_file.write(annotation + '\n')
 

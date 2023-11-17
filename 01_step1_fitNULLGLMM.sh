@@ -239,6 +239,13 @@ head phenotypes.tsv
 head covariates.tsv
 head sampleids
 
+# Assuming trait_type is already set in your environment
+if [ "$trait_type" == "quantitative" ]; then
+    trait_flag="--qt"
+else
+    trait_flag="--bt"
+fi
+
 cmd="""regenie \
           --step 1 \
           --bed $bed \
@@ -251,7 +258,7 @@ cmd="""regenie \
           --keep ${HOME}/sampleids \
           --threads=${n_threads} \
           --bsize 1000 \
-          --qt \
+          $trait_flag \
           --out ${HOME}/$OUT
 """
 

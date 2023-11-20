@@ -262,6 +262,7 @@ FNR==1{
 
 head phenotypes.tsv
 head covariates.tsv
+head anno.txt
 
 echo "${pheno} ${HOME}/${LOCOFILE}" > list_file
 

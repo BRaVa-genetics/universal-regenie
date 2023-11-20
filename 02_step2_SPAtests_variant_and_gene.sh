@@ -130,9 +130,9 @@ if [[ ${TESTTYPE} == "" ]]; then
   exit 1
 fi
 
-if [[ "$TESTTYPE" == "quantitative" ]]; then
+if [[ "$PHENOTYPE" == "quantitative" ]]; then
   type_flag="--qt"
-elif [[ "$TESTTYPE" == "binary" ]]; then
+elif [[ "$PHENOTYPE" == "binary" ]]; then
   type_flag="--bt"
 else
   echo "invalid TESTTYPE!: ${TESTTYPE}"

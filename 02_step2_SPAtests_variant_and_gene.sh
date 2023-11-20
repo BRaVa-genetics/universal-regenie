@@ -46,6 +46,11 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
+    --phenoType)
+      PHENOTYPE="$2"
+      shift # past argument
+      shift # past value
+      ;;
     -s|--isSingularity)
       shift # past argument
       shift # past value
@@ -122,6 +127,15 @@ set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 # Checks
 if [[ ${TESTTYPE} == "" ]]; then
   echo "Test type not set"
+  exit 1
+fi
+
+if [[ "$TESTTYPE" == "quantitative" ]]; then
+  type_flag="--qt"
+elif [[ "$TESTTYPE" == "binary" ]]; then
+  type_flag="--bt"
+else
+  echo "invalid TESTTYPE!: ${TESTTYPE}"
   exit 1
 fi
 
@@ -269,6 +283,7 @@ echo "${pheno} ${HOME}/${LOCOFILE}" > list_file
 if [[ "$TESTTYPE" = "variant" ]]; then
   cmd="regenie \
     --step 2 \
+    $type_flag \
     --bed $PLINK \
     --phenoFile ${HOME}/phenotypes.tsv \
     --covarFile ${HOME}/covariates.tsv \
@@ -282,6 +297,7 @@ if [[ "$TESTTYPE" = "variant" ]]; then
 elif [[ "$TESTTYPE" = "group" ]]; then
   cmd="regenie \
     --step 2 \
+    $type_flag \
     --bed $PLINK \
     --phenoFile ${HOME}/phenotypes.tsv \
     --covarFile ${HOME}/covariates.tsv \

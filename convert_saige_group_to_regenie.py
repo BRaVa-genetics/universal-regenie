@@ -23,7 +23,7 @@ def process_file(input_file, annotation_file, set_list_file, annotation_string):
         for line in converted_lines:
             conv_file.write(line + '\n')
 
-    with gzip.open(input_file, 'r') as file:
+    with gzip.open(input_file, 'rt') as file:
         for line in file:
             parts = line.strip().split()
             gene_name = parts[0]
